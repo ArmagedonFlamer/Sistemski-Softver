@@ -33,7 +33,7 @@ LDR     (ldr)
 STR     (str)
 
 numbers     ([0-9])+
-alpha       ([a-zA-Z])+
+variable    ^[a-zA-Z_$][a-zA-Z_$0-9]*
 
 %%
 
@@ -62,10 +62,10 @@ alpha       ([a-zA-Z])+
 {LDR}       {yylval.number=0b10100000; return (LDR); }//load 
 {STR}       {yylval.number=0b10110000; return (STR); }//store
 
-{alpha}			   {sscanf(yytext, "%s", yylval.name); return (STRING);}
-{numbers}      {yylval.number = atoi(yytext); return (NUM);}
-";"      		   {return (SEMICOLON);}
-.      		     {showError(); return(OTHER);}
+{variable}	    {sscanf(yytext, "%s", yylval.name); return (STRING);}
+{numbers}       {yylval.number = atoi(yytext); return (NUM);}
+";"      		{return (SEMICOLON);}
+.      		    {showError(); return(OTHER);}
 %%
 
 
