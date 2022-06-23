@@ -7,9 +7,10 @@ int yyerror(char *s);
 extern FILE * yyin;
 %}
 
-%token STRING NUM HALT INT IRET CALL RET JMP JEQ JNE JGT XCHG ADD SUB MUL DIV CMP NOT AND OR XOR TEST SHL SHR LDR STR OTHER SEMICOLON
+%token VARIABLE NUM HALT INT IRET CALL RET JMP JEQ JNE JGT XCHG ADD SUB MUL DIV CMP NOT AND OR XOR TEST SHL SHR LDR STR OTHER SEMICOLON SPACE ENTER COLON
+		PUSH POP
 
-%type <name> STRING
+%type <name> VARIABLE
 %type <number> NUM
 %type <number> HALT 
 %type <number> INT  
@@ -35,6 +36,8 @@ extern FILE * yyin;
 %type <number> SHR  
 %type <number> LDR  
 %type <number> STR  
+%type <number> PUSH  
+%type <number> POP  
 %type <number> OTHER
 
 %union{
@@ -49,40 +52,44 @@ prog:
 ;
 
 stmts:
-		| stmt SEMICOLON stmts
+		| stmt stmts
+
 
 stmt:
-	STRING {
-				printf("Your entered a string - %s", $1);
-		}
-		| NUM {
-				printf("The number you entered is - %d", $1);
-		}
-		| HALT    {	printf("UNEO SI HALT: %d", $1);}
-		| INT     {	printf("UNEO SI INT: %d", $1);}
-		| IRET    {	printf("UNEO SI IRET: %d", $1);}
-		| CALL    {	printf("UNEO SI CALL: %d", $1);}
-		| RET     {	printf("UNEO SI RET: %d", $1);}
-		| JMP     {	printf("UNEO SI JMP: %d", $1);}
-		| JEQ     {	printf("UNEO SI JEQ: %d", $1);}
-		| JNE     {	printf("UNEO SI JNE: %d", $1);}
-		| JGT     {	printf("UNEO SI JGT: %d", $1);}
-		| XCHG    {	printf("UNEO SI XCHG: %d", $1);}
-		| ADD     {	printf("UNEO SI ADD: %d", $1);}
-		| SUB     {	printf("UNEO SI SUB: %d", $1);}
-		| MUL     {	printf("UNEO SI MUL: %d", $1);}
-		| DIV     {	printf("UNEO SI DIV: %d", $1);}
-		| CMP     {	printf("UNEO SI CMP: %d", $1);}
-		| NOT     {	printf("UNEO SI NOT: %d", $1);}
-		| AND     {	printf("UNEO SI AND: %d", $1);}
-		| OR      {	printf("UNEO SI OR: %d", $1);}
-		| XOR     {	printf("UNEO SI XOR: %d", $1);}
-		| TEST    {	printf("UNEO SI TEST: %d", $1);}
-		| SHL     {	printf("UNEO SI SHL: %d", $1);}
-		| SHR     {	printf("UNEO SI SHR: %d", $1);}
-		| LDR     {	printf("UNEO SI LDR: %d", $1);}
-		| STR     {	printf("UNEO SI STR: %d", $1);}
-		| OTHER
+
+HALT    	{printf("%d", $1);}
+| INT     	{printf("%d", $1);}
+| IRET    	{printf("%d", $1);}
+| CALL    	{printf("%d", $1);}
+| RET     	{printf("%d", $1);}
+| JMP     	{printf("%d", $1);}
+| JEQ     	{printf("%d", $1);}
+| JNE     	{printf("%d", $1);}
+| JGT     	{printf("%d", $1);}
+| XCHG    	{printf("%d", $1);}
+| ADD     	{printf("%d", $1);}
+| SUB     	{printf("%d", $1);}
+| MUL     	{printf("%d", $1);}
+| DIV     	{printf("%d", $1);}
+| CMP     	{printf("%d", $1);}
+| NOT     	{printf("%d", $1);}
+| AND    	{printf("%d", $1);}
+| OR     	{printf("%d", $1);}
+| XOR     	{printf("%d", $1);}
+| TEST    	{printf("%d", $1);}
+| SHL     	{printf("%d", $1);}
+| SHR     	{printf("%d", $1);}
+| LDR     	{printf("%d", $1);}
+| STR     	{printf("%d", $1);}
+| PUSH		{printf("%d", $1);}
+| POP  		{printf("%d", $1);}
+| ENTER		{printf("\n");}
+| SPACE		{printf(" ");}
+| COLON		{printf(":");}
+| VARIABLE	{printf("%s", $1);}
+| NUM  		{printf("%d", $1);}
+| OTHER
+
 ;
 
 %%
@@ -106,7 +113,7 @@ int main()
   yyin = myfile;
   
   // lex through the input:
-  yyparse();
+  while(yyparse());
   fclose(myfile);
 }
 

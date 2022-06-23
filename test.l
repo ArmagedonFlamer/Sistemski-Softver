@@ -31,9 +31,11 @@ SHL     (shl)
 SHR     (shr)
 LDR     (ldr)
 STR     (str)
+PUSH    (push)
+POP     (pop)
 
 numbers     ([0-9])+
-variable    ^[a-zA-Z_$][a-zA-Z_$0-9]*
+variable    [a-zA-Z_.#$][a-zA-Z_$0-9]*
 
 %%
 
@@ -61,11 +63,17 @@ variable    ^[a-zA-Z_$][a-zA-Z_$0-9]*
 {SHR}       {yylval.number=0b10010001; return (SHR); }//shr
 {LDR}       {yylval.number=0b10100000; return (LDR); }//load 
 {STR}       {yylval.number=0b10110000; return (STR); }//store
+{PUSH}      {yylval.number=0b11111110; return (PUSH); }//push
+{POP}       {yylval.number=0b11111111; return (POP); }//pop
 
-{variable}	    {sscanf(yytext, "%s", yylval.name); return (STRING);}
+{variable}	    {sscanf(yytext, "%s", yylval.name); return (VARIABLE);}
 {numbers}       {yylval.number = atoi(yytext); return (NUM);}
 ";"      		{return (SEMICOLON);}
-.      		    {showError(); return(OTHER);}
+"\n"            {return (ENTER);}
+" "             {return (SPACE);}
+"\t"            {return (SPACE);}
+":"             {return (COLON);}
+.      		    {} 
 %%
 
 
